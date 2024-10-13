@@ -1,4 +1,4 @@
-#include "Decoder\decoder.h"
+#include "hevcdecoder.h"
 
 CFactoryTemplate g_Templates[] = {
 	L"Pristine: HEVC Decoder", &CLSID_PristineHevcDecoder, CPristineHevcDecoderFilter::CreateInstance, NULL, &hevcDecoderFilt,
