@@ -1,6 +1,8 @@
-#include "decoder.h"
+#include "hevcdecoder.h"
 
+static GUID MEDIASUBTYPE_H265 = { 0x35363248, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 };
 static GUID MEDIASUBTYPE_HEVC = { 0x43564548, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 };
+static GUID MEDIASUBTYPE_HVC1 = { 0x31435648, 0x0000, 0x0010, 0x80, 0x00, 0x00, 0xAA, 0x00, 0x38, 0x9B, 0x71 };
 
 IMFTransform* m_pDecoderTransform = nullptr;
 UINT32 m_width = 0, m_height = 0;
@@ -196,7 +198,9 @@ HRESULT CPristineHevcDecoderFilter::CheckInputType(const CMediaType *mtIn)
 
 	CheckPointer(mtIn, E_POINTER);
 
-	if (mtIn->subtype != MEDIASUBTYPE_HEVC)
+	if (mtIn->subtype != MEDIASUBTYPE_H265 &&
+		mtIn->subtype != MEDIASUBTYPE_HEVC &&
+		mtIn->subtype != MEDIASUBTYPE_HVC1)
 		return VFW_E_TYPE_NOT_ACCEPTED;
 
 	if (mtIn->formattype == FORMAT_VideoInfo2)
@@ -250,7 +254,9 @@ HRESULT CPristineHevcDecoderFilter::CheckTransform(const CMediaType *mtIn, const
 	CheckPointer(mtIn, E_POINTER);
 	CheckPointer(mtOut, E_POINTER);
 
-	if (mtIn->subtype != MEDIASUBTYPE_HEVC || 
+	if (mtIn->subtype != MEDIASUBTYPE_H265 &&
+		mtIn->subtype != MEDIASUBTYPE_HEVC &&
+		mtIn->subtype != MEDIASUBTYPE_HVC1 || 
 		mtOut->subtype != MEDIASUBTYPE_NV12) return VFW_E_TYPE_NOT_ACCEPTED;
 
 	return NOERROR;
