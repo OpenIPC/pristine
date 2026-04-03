@@ -1,14 +1,6 @@
-#include <streams.h>
-#include <initguid.h>
+﻿#pragma once
 
-#include <dvdmedia.h>
-#include <mfapi.h>
-#include <Mferror.h>
-#include <mfidl.h>
-#include <mfobjects.h>
-#include <mfplay.h>
-#include <mfreadwrite.h>
-#include <mftransform.h>
+#include "videodecoder.h"
 
 
 DEFINE_GUID(CLSID_PristineHevcDecoder,
@@ -22,7 +14,7 @@ const AMOVIESETUP_PIN hevcDecoderPins[] =
 		FALSE,			// Is it an output
 		FALSE,			// Allowed none
 		FALSE,			// Likewise many
-		&CLSID_NULL,	// Connects to filter
+		NULL,			// Connects to filter
 		NULL,			// Connects to pin
 		0,				// Number of types
 		NULL			// Pin information
@@ -33,7 +25,7 @@ const AMOVIESETUP_PIN hevcDecoderPins[] =
 		TRUE,
 		FALSE,
 		FALSE,
-		&CLSID_NULL,
+		NULL,
 		NULL,
 		0,
 		NULL
@@ -49,22 +41,30 @@ const AMOVIESETUP_FILTER hevcDecoderFilt =
 	hevcDecoderPins
 };
 
-class CPristineHevcDecoderFilter : public CTransformFilter
+
+class CPristineHevcDecoderFilter : public CPristineVideoDecoderFilter
 {
-
 public:
-
 	CPristineHevcDecoderFilter(LPUNKNOWN pUnk, HRESULT* phr);
 	~CPristineHevcDecoderFilter();
 
-	DECLARE_IUNKNOWN;
 	static CUnknown* WINAPI CreateInstance(LPUNKNOWN, HRESULT *);
 
-	HRESULT Transform(IMediaSample *pIn, IMediaSample *pOut);
+	// CTransformFilter overrides
+	HRESULT Receive(IMediaSample *pSample);
 	HRESULT CheckInputType(const CMediaType *mtIn);
-	HRESULT CheckTransform(const CMediaType *mtIn, const CMediaType *mtOut);
-	HRESULT DecideBufferSize(IMemAllocator *pAlloc,
-		ALLOCATOR_PROPERTIES *pProperties);
-	HRESULT GetMediaType(int iPosition, CMediaType *pMediaType);
 
+protected:
+	// CPristineVideoDecoderFilter overrides
+	HRESULT ActivateDecoderMFT();
+	BOOL IsInputSubtypeSupported(const GUID &subtype) const;
+
+private:
+	HRESULT SendParameterSets();
+
+	UINT                    m_nalLengthSize;
+	BYTE*                   m_pParamSets;
+	UINT                    m_cbParamSets;
+	BOOL                    m_bParamSetsSent;
+	BOOL                    m_bIsHVC1;
 };
