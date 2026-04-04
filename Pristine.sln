@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32819.101
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseClasses", "Libs\BaseClasses\BaseClasses.vcxproj", "{E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Filters", "Source\Filters.vcxproj", "{24DCC163-C62A-4043-BBBD-BBCC740629DA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Pristine", "Source\Pristine.vcxproj", "{24DCC163-C62A-4043-BBBD-BBCC740629DA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA} = {E8A3F6FA-AE1C-4C8E-A0B6-9C8480324EAA}
 	EndProjectSection

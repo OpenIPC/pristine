@@ -1,4 +1,4 @@
-LIBRARY     Filters.ax
+LIBRARY     Pristine.ax
 
 EXPORTS
             DllMain                 PRIVATE

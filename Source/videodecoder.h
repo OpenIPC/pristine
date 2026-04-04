@@ -1,11 +1,14 @@
 ﻿#pragma once
 
+#define _CRT_SECURE_NO_WARNINGS
+
 #include <stdlib.h>
 
 #include <initguid.h>
 #include <codecapi.h>
 
 #include <streams.h>
+#include <shellapi.h>
 #include <dvdmedia.h>
 
 #include <mfapi.h>
@@ -22,10 +25,13 @@
 #include <evr.h>
 
 
+#ifndef SAFERELEASE_DEFINED
+#define SAFERELEASE_DEFINED
 template<class T> static inline void SafeRelease(T **pp)
 {
 	if (*pp) { (*pp)->Release(); *pp = nullptr; }
 }
+#endif
 
 static inline UINT GetAligned(UINT dimension, UINT alignment)
 {

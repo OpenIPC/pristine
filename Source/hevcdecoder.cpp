@@ -179,7 +179,17 @@ HRESULT CPristineHevcDecoderFilter::ActivateDecoderMFT()
 		CoTaskMemFree(ppActivates);
 	}
 
-	if (!m_pDecoderTransform) return E_FAIL;
+	if (!m_pDecoderTransform)
+	{
+		int result = MessageBoxW(NULL,
+			L"No HEVC (H.265) video decoder was found on this system.\n\n"
+			L"Would you like to install the HEVC Video Extensions from the Microsoft Store?",
+			L"Pristine: HEVC Decoder", MB_YESNO | MB_ICONQUESTION);
+		if (result == IDYES)
+			ShellExecuteW(NULL, L"open",
+				L"ms-windows-store://pdp/?ProductId=9nmzlz57r3t7", NULL, NULL, SW_SHOWNORMAL);
+		return E_FAIL;
+	}
 
 	return S_OK;
 }

@@ -393,6 +393,17 @@ HRESULT CPristineVideoDecoderFilter::DeliverOneOutput(IMediaSample *pIn)
 
 	DWORD dwOutputSize = (DWORD)pOut->GetSize();
 
+	// Query the MFT's actual output frame size (may be aligned/padded)
+	UINT32 mftWidth = m_width, mftHeight = m_height;
+	{
+		IMFMediaType *pOutType = nullptr;
+		if (SUCCEEDED(m_pDecoderTransform->GetOutputCurrentType(0, &pOutType)))
+		{
+			MFGetAttributeSize(pOutType, MF_MT_FRAME_SIZE, &mftWidth, &mftHeight);
+			pOutType->Release();
+		}
+	}
+
 	IMFMediaBuffer *pResultBuffer = nullptr;
 	hr = pResultSample->ConvertToContiguousBuffer(&pResultBuffer);
 	if (SUCCEEDED(hr))
@@ -427,7 +438,7 @@ HRESULT CPristineVideoDecoderFilter::DeliverOneOutput(IMediaSample *pIn)
 						       pScanline0 + row * lPitch,
 						       m_width);
 					BYTE *pDstUV = pOutputBuf + dstStride * m_height;
-					const BYTE *pSrcUV = pScanline0 + lPitch * m_height;
+					const BYTE *pSrcUV = pScanline0 + lPitch * mftHeight;
 					UINT uvHeight = m_height / 2;
 					for (UINT row = 0; row < uvHeight; row++)
 						memcpy(pDstUV + row * dstStride,
@@ -441,13 +452,13 @@ HRESULT CPristineVideoDecoderFilter::DeliverOneOutput(IMediaSample *pIn)
 		}
 		else
 		{
-			// Linear buffer path
+			// Linear buffer path – use MFT's aligned height for pitch & UV offset
 			BYTE *pDecoded = nullptr;
 			DWORD cbDecoded = 0;
 			hr = pResultBuffer->Lock(&pDecoded, nullptr, &cbDecoded);
 			if (SUCCEEDED(hr))
 			{
-				LONG srcPitch = (LONG)(cbDecoded * 2 / (m_height * 3));
+				LONG srcPitch = (LONG)(cbDecoded * 2 / (mftHeight * 3));
 
 				if (bOutputRGB32)
 				{
@@ -462,7 +473,7 @@ HRESULT CPristineVideoDecoderFilter::DeliverOneOutput(IMediaSample *pIn)
 						       pDecoded   + row * srcPitch,
 						       m_width);
 					BYTE *pDstUV = pOutputBuf + dstStride * m_height;
-					const BYTE *pSrcUV = pDecoded + srcPitch * m_height;
+					const BYTE *pSrcUV = pDecoded + srcPitch * mftHeight;
 					UINT uvHeight = m_height / 2;
 					for (UINT row = 0; row < uvHeight; row++)
 						memcpy(pDstUV + row * dstStride,
@@ -567,7 +578,7 @@ HRESULT CPristineVideoDecoderFilter::GetMediaType(
 	if (iPosition < 0) return E_INVALIDARG;
 	if (iPosition > 3) return VFW_S_NO_MORE_ITEMS;
 
-	BOOL bNV12 = (iPosition % 1 == 0);
+	BOOL bNV12 = (iPosition < 2);
 	BOOL bVIH2 = (iPosition % 2 == 0);
 
 	const GUID &subtype = bNV12 ? MEDIASUBTYPE_NV12 : MEDIASUBTYPE_RGB32;

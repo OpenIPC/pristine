@@ -22,7 +22,7 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{24DCC163-C62A-4043-BBBD-BBCC740629DA}</ProjectGuid>
-    <RootNamespace>Filters</RootNamespace>
+    <RootNamespace>Pristine</RootNamespace>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -43,6 +43,7 @@
     <OutDir>..\Output\$(Configuration)-$(Platform)\</OutDir>
     <IntDir>..\Output\$(Configuration)-$(Platform)\Build\</IntDir>
     <TargetExt>.ax</TargetExt>
+    <TargetName>Pristine</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <LinkIncremental>true</LinkIncremental>
@@ -60,7 +61,7 @@
     </ClCompile>
     <Link>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <ModuleDefinitionFile>filters.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Pristine.def</ModuleDefinitionFile>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>..\Libs\BaseClasses\$(Configuration)-$(Platform)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries />
@@ -87,7 +88,7 @@
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>advapi32.lib;d3d11.lib;dxgi.lib;evr.lib;mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;ole32.lib;oleaut32.lib;user32.lib;winmm.lib;strmbase.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>advapi32.lib;d3d11.lib;dxgi.lib;evr.lib;mf.lib;mfplat.lib;mfreadwrite.lib;mfuuid.lib;ole32.lib;oleaut32.lib;shell32.lib;user32.lib;winmm.lib;strmbase.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
     </Link>
@@ -108,18 +109,28 @@
   <ItemGroup>
     <ClCompile Include="videodecoder.cpp" />
     <ClCompile Include="hevcdecoder.cpp" />
-    <ClCompile Include="filters.cpp" />
+    <ClCompile Include="vp9decoder.cpp" />
+    <ClCompile Include="av1decoder.cpp" />
+    <ClCompile Include="audiodecoder.cpp" />
+    <ClCompile Include="aacdecoder.cpp" />
+    <ClCompile Include="opusdecoder.cpp" />
+    <ClCompile Include="entry.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="filters.def" />
+    <None Include="Pristine.def" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="videodecoder.h" />
     <ClInclude Include="hevcdecoder.h" />
+    <ClInclude Include="vp9decoder.h" />
+    <ClInclude Include="av1decoder.h" />
+    <ClInclude Include="audiodecoder.h" />
+    <ClInclude Include="aacdecoder.h" />
+    <ClInclude Include="opusdecoder.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="filters.rc" />
+    <ResourceCompile Include="Pristine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
