@@ -27,4 +27,4 @@ Furthermore, appropriate COM interfaces will allow configuring advanced settings
 Please **_[support our project](https://openipc.org/support-open-source)_** with donations or orders for development or maintenance. Thank you!
 
 
-[logo]: https://openipc.org/assets/openipc-logo-black.svg
+[logo]: https://raw.githubusercontent.com/OpenIPC/.github/refs/heads/main/assets/openipc-logo-black.svg
